@@ -32,7 +32,7 @@ jobs:
       - name: Build & push image
         run: |
           docker buildx create --use
-          docker buildx build -t asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF#refs/tags/} --push .
+          docker buildx build -t asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${GITHUB_REPOSITORY#*/}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF#refs/tags/} --push .
   
   # deploy-cloud-run:
   #   runs-on: ubuntu-22.04
