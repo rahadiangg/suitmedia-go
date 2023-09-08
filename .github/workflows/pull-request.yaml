@@ -7,10 +7,6 @@ jobs:
   lint_and_test:
     runs-on: ubuntu-22.04
 
-    strategy:
-      matrix:
-        app: [service1, service2]
-
     steps:
       - uses: actions/checkout@v3
         with:
