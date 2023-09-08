@@ -12,19 +12,37 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Auth to GCP
+        id: auth
+        uses: google-github-actions/auth@v1
+        with :
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      
       - name: Auth Docker
         run: |
-          echo ${{ secrets.ACCESS_TOKEN }} | docker login ghcr.io -u rahadiangg --password-stdin
+          gcloud --quiet auth configure-docker asia-southeast2-docker.pkg.dev
 
-      - name: Build image for ${{ matrix.app }}
-        working-directory: ${{ matrix.app }}
+      - name: Build image
         run: |
-          docker build -t ghcr.io/rahadiangg/pleno-${{ matrix.app }}:${GITHUB_REF#refs/tags/} --target=final .
+          docker build -t asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF#refs/tags/} .
 
-      - name: Push image for ${{ matrix.app }}
+      - name: Push image
         run: |
-          docker push ghcr.io/rahadiangg/pleno-${{ matrix.app }}:${GITHUB_REF#refs/tags/}
+          docker push asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF#refs/tags/}
+  
+  # deploy-cloud-run:
+  #   runs-on: ubuntu-22.04
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+      
+
