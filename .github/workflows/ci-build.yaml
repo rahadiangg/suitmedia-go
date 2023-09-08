@@ -36,6 +36,8 @@ jobs:
   
   deploy-cloud-run:
     runs-on: ubuntu-22.04
+    needs:
+      - build-and-push
 
     steps:
       - name: Auth to GCP
