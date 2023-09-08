@@ -29,13 +29,10 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker asia-southeast2-docker.pkg.dev
 
-      - name: Build image
+      - name: Build & push image
         run: |
-          docker build -t asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF#refs/tags/} .
-
-      - name: Push image
-        run: |
-          docker push asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF#refs/tags/}
+          docker buildx create --user
+          docker buildx build -t asia-southeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${GITHUB_REPOSITORY#*/}:${GITHUB_REF#refs/tags/} --push .
   
   # deploy-cloud-run:
   #   runs-on: ubuntu-22.04
