@@ -1,9 +1,8 @@
 FROM golang:1.20 AS builder
 
 WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
 COPY . .
+RUN go mod download
 RUN CGO_ENABLED=0 go build . -o suitmedia-go
 
 FROM alpine:3.18
